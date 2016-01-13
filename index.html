@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+
+
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+  <link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet"/>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.0/js/bootstrap.min.js" type="text/javascript"></script>
+
+  <script src="mqttws31.js" type="text/javascript"></script>
+  <script src="config.js" type="text/javascript"></script>
+
+  <link rel="stylesheet" type="text/css" href="spectrum.css">
+  <script type="text/javascript" src="spectrum.js"></script>
+
+  <title>LED Hat Colour Picker</title>
+
+  <style>
+    .sp-picker-container { width: 100% }
+
+    .sp-container, .sp-replacer, .sp-preview, .sp-dragger, .sp-slider, .sp-alpha, .sp-clear, .sp-alpha-handle, .sp-container.sp-dragging .sp-input, .sp-container, .sp-top, .sp-cf, .sp-top-inner button {
+        -moz-user-select: none;
+        width: 100%;
+    }
+
+    .sp-dragger { width: 10px; height: 10px }
+  </style>
+
+</head>
+<body>
+
+<div class="container-full">
+    <input type='text' id="flat" />
+</div>
+
+<script type='text/javascript'>//<![CDATA[
+
+$("#flat").spectrum({
+    flat: true,
+    showButtons: false,
+    move: onMove
+});
+
+// Called when the colour picker detects a change event
+function onMove(col){
+    colour = col.toRgb()
+    console.log(colour);
+    console.log(topic)
+    var payload = '{ "color": ' + JSON.stringify(colour) + ' }'
+
+    msg = new Paho.MQTT.Message(payload);
+    msg.destinationName = topic;
+    mqtt.send(msg);
+
+};
+
+var mqtt;
+var reconnectTimeout = 2000;
+
+function MQTTconnect() {
+    mqtt = new Paho.MQTT.Client(
+                    host,
+                    port,
+                    "web_" + parseInt(Math.random() * 100,
+                    10));
+    var options = {
+        timeout: 3,
+        useSSL: useTLS,
+        cleanSession: cleansession,
+        onSuccess: onConnect,
+        onFailure: function (message) {
+            console.log("Connection failed: " + message.errorMessage + "Retrying");
+            setTimeout(MQTTconnect, reconnectTimeout);
+        }
+    };
+
+    mqtt.onConnectionLost = onConnectionLost;
+
+    if (username != null) {
+        options.userName = username;
+        options.password = password;
+    }
+    // console.log(options);
+    mqtt.connect(options);
+
+}
+
+// Called upon initial successful connection
+function onConnect() {
+    console.log("Connected to MQTT, will post to topic:" + topic)
+}
+
+// Called when connection to the broker has been lost
+function onConnectionLost(response) {
+    setTimeout(MQTTconnect, reconnectTimeout);
+    console.log('danger', 'Connected lost: ' + response.errorMessage + ' Reconnecting');
+
+};
+
+$(document).ready(function() {
+    MQTTconnect();
+    console.log(topic);
+    // send_message(input.attr("name"), input.attr("state"))
+});
+
+//]]>
+
+</script>
+</body>
+</html>
