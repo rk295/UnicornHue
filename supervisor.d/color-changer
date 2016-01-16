@@ -1,0 +1,11 @@
+[program:color-changer]
+command=/home/robin/led/color-changer.py
+environment =
+	MQTT_HOST="hostname",
+	MQTT_TOPIC="ledhat/colors",
+	MQTT_USER="username",
+	MQTT_PASSWORD="password"
+autorestart=true
+user=root
+redirect_stderr=true
+stdout_logfile=/home/robin/led/color-changer.log
