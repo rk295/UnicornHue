@@ -7,7 +7,7 @@ This is my implementation of the Philips [Hue] light using a [Raspberry Pi Zero]
 
 There are two bits of code, firstly the python demon designed to run on the pi (as root, so it can write to `/dev/mem`) and the web ui which is designed to be used in a browser.
 
-The two communicate using the MQTT message protocol, I have the [Mosquitto] MQTT broker installed on my Pi, which must have WebSockets support enabled for this to work.  The HTML inside `index.html` loads settings from `config.js`, which tells it where the MQTT broker is, and which topic to post messages too. There are in the format of simple JSON documents which list the Red, Green, Blue and Alpha channel - I use the Alpha channel as the brightness.  An example message looks like:
+The two communicate using the MQTT message protocol, I have the [Mosquitto] MQTT broker installed on my Pi, which must have WebSockets support enabled for this to work.  The HTML inside `index.html` loads settings from `config.js`, which tells it where the MQTT broker is, and which topic to post messages too. These are in the format of simple JSON documents which list the Red, Green, Blue and Alpha channel - I use the Alpha channel as the brightness.  An example message looks like:
 
 ```
 { "color": {"r":168,"g":136,"b":72,"a":0.5} }
