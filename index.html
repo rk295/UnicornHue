@@ -21,14 +21,16 @@
   <title>LED Hat Colour Picker</title>
 
   <style>
-    .sp-picker-container { width: 100% }
+    .sp-picker-container { width: 90% }
 
-    .sp-container, .sp-replacer, .sp-preview, .sp-dragger, .sp-slider, .sp-alpha, .sp-clear, .sp-alpha-handle, .sp-container.sp-dragging .sp-input, .sp-container, .sp-top, .sp-cf, .sp-top-inner button {
+    .sp-container, .sp-replacer, .sp-preview, .sp-dragger, .sp-slider, .sp-alpha, .sp-clear, .sp-container.sp-dragging .sp-input, .sp-container, .sp-top, .sp-cf, .sp-top-inner button {
         -moz-user-select: none;
         width: 100%;
     }
 
-    .sp-dragger { width: 10px; height: 10px }
+    .sp-alpha { height: 20px; }
+
+    .sp-dragger { width: 10px; height: 10px } 
   </style>
 
 </head>
@@ -41,7 +43,9 @@
 <script type='text/javascript'>//<![CDATA[
 
 $("#flat").spectrum({
+    color: tinycolor("rgba (255, 170, 0, .5)"),
     flat: true,
+    showAlpha: true,
     showButtons: false,
     move: onMove
 });

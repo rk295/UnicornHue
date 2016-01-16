@@ -1,6 +1,7 @@
 #!/usr/bin/python -u
 # -u to unbuffer stdout, plays nicer with supervisor
 
+import unicornhat as unicorn
 import json
 import os
 import logging
@@ -27,11 +28,16 @@ def change_color(color):
     r = color['r']
     g = color['g']
     b = color['b']
+    a = color['a']
+
+    logger.debug("Setting to r:%d g:%d b:%d brightness:%.2f" % (r,g,b,a))
+
+    unicorn.brightness(a)
 
     for y in range(8):
             for x in range(8):
-                    logger.debug("unicorn.set_pixel(%d,%d,int(%s),int(%s),int(%s))" % (x,y,r,g,b))
-                    # unicorn.show()
+                    unicorn.set_pixel(x,y,int(r),int(g),int(b))
+                    unicorn.show()
 
 
 def on_message(client, userdata, message):
